@@ -1,0 +1,40 @@
+{
+	"name": "pythagus/laravel-lydia",
+	"description": "Package to use Lydia payment way with Laravel",
+	"license": "MIT",
+	"type": "package",
+	"authors": [
+		{
+			"name": "Damien Molina",
+			"email": "damis01800@gmail.com"
+		}
+	],
+	"require": {
+		"php": "^7.3|^8.0",
+		"monolog/monolog": "^2.0",
+		"pythagus/lydia": "^1.0",
+		"laravel/framework": "^6.0 | ^7.0 | ^8.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"Pythagus\\LaravelLydia\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Pythagus\\LaravelLydia\\Tests\\": "tests/"
+		}
+	},
+	"extra": {
+		"laravel": {
+			"providers": [
+				"Pythagus\\LaravelLydia\\LydiaServiceProvider"
+			]
+		}
+	},
+	"config": {
+		"sort-packages": true
+	},
+	"minimum-stability": "stable",
+	"prefer-stable": true
+}
