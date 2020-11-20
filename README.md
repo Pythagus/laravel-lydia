@@ -54,6 +54,16 @@ a given fillable model. If you specify a class name to ```setDefaultPaymentDataC
 be made and fill with the data array. Please, check the [provided migration](src/Database/CreatePaymentLydiaTable.php) to
 get a list of the filled data.
 
+You can set the model in your ```AppServiceProvider``` :
+```php
+use Pythagus\LaravelLydia\Lydia;
+
+public function register() {
+     // Set the PaymentLydia model.
+     Lydia::setDefaultPaymentDataCallback(YourPaymentLydia::class) ;
+}
+```
+
 #### CreatePaymentLydiaTable migration
 The package is also provided with a default migration implementing the main Lydia's data. Please, check the 
 [provided migration file](src/Database/CreatePaymentLydiaTable.php).
