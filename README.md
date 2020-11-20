@@ -49,20 +49,6 @@ callable takes an argument (array) that should be saved in your database. This p
 #### PaymentLydia model
 The ```Pythagus/LaravelLydia/Models/PaymentLydia``` model is a Lydia's data possible representation. You can extend this class 
 to custom it, or don't use it at all.
-The ```Pythagus/LaravelLydia/Lydia``` facade has a ```setDefaultPaymentDataCallback()``` method to add the callback from 
-a given fillable model. If you specify a class name to ```setDefaultPaymentDataCallback()```, an instance of this class will
-be made and fill with the data array. Please, check the [provided migration](src/Database/CreatePaymentLydiaTable.php) to
-get a list of the filled data.
-
-You can set the model in your ```AppServiceProvider``` :
-```php
-use Pythagus\LaravelLydia\Lydia;
-
-public function register() {
-     // Set the PaymentLydia model.
-     Lydia::setDefaultPaymentDataCallback(YourPaymentLydia::class) ;
-}
-```
 
 #### CreatePaymentLydiaTable migration
 The package is also provided with a default migration implementing the main Lydia's data. Please, check the 
