@@ -3,6 +3,7 @@
 namespace Pythagus\LaravelLydia\Log;
 
 use Closure;
+use Throwable;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Pythagus\Lydia\Contracts\LydiaException;
@@ -68,11 +69,22 @@ class LydiaLog extends Logger {
 	 */
 	public static function reportableClosure() {
 		return function(LydiaException $e) {
-			$logger = new LydiaLog() ;
-			$logger->alert($e) ;
+			LydiaLog::report($e) ;
 
 			return false ;
 		} ;
+	}
+
+	/**
+	 * Report the given throwable.
+	 *
+	 * @param LydiaException $throwable
+	 */
+	public static function report(LydiaException $throwable) {
+		try {
+			$logger = new LydiaLog() ;
+			$logger->alert($throwable) ;
+		} catch(Throwable $throwable) {}
 	}
 
 }
