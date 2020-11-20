@@ -3,7 +3,6 @@
 namespace Pythagus\LaravelLydia;
 
 use Pythagus\Lydia\Lydia as BaseLydia;
-use Pythagus\LaravelLydia\Models\PaymentLydia;
 
 /**
  * Class Lydia
@@ -12,13 +11,6 @@ use Pythagus\LaravelLydia\Models\PaymentLydia;
  * @author: Damien MOLINA
  */
 class Lydia extends BaseLydia {
-
-	/**
-	 * Callable used to save the payment data.
-	 *
-	 * @var callable
-	 */
-	private static $savePaymentCallback ;
 
 	/**
 	 * Get the Lydia's configuration.
@@ -48,40 +40,6 @@ class Lydia extends BaseLydia {
 	 */
 	public function redirect(string $route) {
 		return redirect($route) ;
-	}
-
-	/**
-	 * Set the data callable.
-	 *
-	 * @param callable $callable
-	 */
-	public static function setPaymentDataCallback(callable $callable) {
-		Lydia::$savePaymentCallback = $callable ;
-	}
-
-	/**
-	 * Set the data callable.
-	 *
-	 * @param string|null $class
-	 */
-	public static function setDefaultPaymentDataCallback(string $class = null) {
-		Lydia::setPaymentDataCallback(function(array $data) use ($class) {
-			$payment = $class ? new $class : new PaymentLydia() ;
-			$payment->fill($data) ;
-			$payment->save() ;
-		}) ;
-	}
-
-	/**
-	 * Save the payment data to retrieve them
-	 * to check the transaction state.
-	 *
-	 * @param array $data
-	 */
-	public function savePaymentData(array $data) {
-		if(! is_null(Lydia::$savePaymentCallback)) {
-			call_user_func(Lydia::$savePaymentCallback, $data) ;
-		}
 	}
 
 }
