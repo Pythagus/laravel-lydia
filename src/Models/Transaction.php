@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string first_name
  * @property string last_name
  * @property string email
+ * @property bool	displayed
  * @property int    state
  * @property float  total_amount
  *
@@ -72,7 +73,7 @@ class Transaction extends Model {
 	 * @var array
 	 */
 	protected $fillable = [
-		'first_name', 'last_name', 'email', 'state', 'total_amount'
+		'first_name', 'last_name', 'email', 'state', 'total_amount', 'displayed'
 	] ;
 
 	/**

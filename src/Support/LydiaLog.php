@@ -1,6 +1,6 @@
 <?php
 
-namespace Pythagus\LaravelLydia\Log;
+namespace Pythagus\LaravelLydia\Support;
 
 use Closure;
 use Throwable;
@@ -10,7 +10,7 @@ use Pythagus\Lydia\Contracts\LydiaException;
 
 /**
  * Class LydiaLog
- * @package Pythagus\LaravelLydia\Log
+ * @package Pythagus\LaravelLydia\Support
  *
  * @property string file
  *
@@ -78,13 +78,12 @@ class LydiaLog extends Logger {
 	/**
 	 * Report the given throwable.
 	 *
-	 * @param LydiaException $throwable
+	 * @param Throwable $throwable
 	 */
-	public static function report(LydiaException $throwable) {
+	public static function report(Throwable $throwable) {
 		try {
 			$logger = new LydiaLog() ;
 			$logger->alert($throwable) ;
-		} catch(Throwable $throwable) {}
+		} catch(Throwable $ignored) {}
 	}
-
 }

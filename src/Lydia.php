@@ -30,4 +30,20 @@ class Lydia {
 	public function enabled() {
 		return $this->config('enabled') ;
 	}
+
+	/**
+	 * Create a new model instance.
+	 *
+	 * @param string $config_key
+	 * @return object|null
+	 */
+	public function instance(string $config_key) {
+		$class = $this->config('models.' . $config_key) ;
+
+		if($class) {
+			return new $class ;
+		}
+
+		return null ;
+	}
 }
