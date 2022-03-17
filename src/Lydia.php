@@ -10,36 +10,17 @@ use Pythagus\Lydia\Lydia as BaseLydia;
  *
  * @author: Damien MOLINA
  */
-class Lydia extends BaseLydia {
+class Lydia {
 
 	/**
-	 * Get the Lydia's configuration.
+	 * Get the config value, or the default one
+	 * otherwise.
 	 *
-	 * @return array
-	 */
-	protected function setConfigArray() {
-		return config('lydia') ;
-	}
-
-	/**
-	 * Format the callback URL to be valid
-	 * regarding the Lydia server.
-	 *
-	 * @param string $url
-	 * @return string
-	 */
-	public function formatCallbackUrl(string $url) {
-		return url('/') . '/' . $url ;
-	}
-
-	/**
-	 * Redirect the user to the given route.
-	 *
-	 * @param string $route
+	 * @param string $key
+	 * @param mixed $default
 	 * @return mixed
 	 */
-	public function redirect(string $route) {
-		return redirect($route) ;
+	public function config(string $key, $default = null) {
+		return config('lydia.' . $key, $default) ;
 	}
-
 }

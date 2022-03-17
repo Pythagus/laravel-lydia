@@ -5,6 +5,7 @@ namespace Pythagus\LaravelLydia\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Pythagus\Lydia\Contracts\LydiaState;
+use Pythagus\LaravelLydia\Support\HasState;
 
 /**
  * Class PaymentLydia
@@ -25,6 +26,8 @@ use Pythagus\Lydia\Contracts\LydiaState;
  */
 class PaymentLydia extends Model implements LydiaState {
 
+	use HasState ;
+
 	/**
 	 * The table associated with the model.
 	 *
@@ -37,14 +40,28 @@ class PaymentLydia extends Model implements LydiaState {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['transaction_id', 'transaction_identifier', 'state', 'url', 'request_id', 'request_uuid'] ;
+	protected $fillable = [
+		'transaction_id', 'transaction_identifier', 'state', 'url', 'request_id', 'request_uuid'
+	] ;
 
 	/**
-	 * The attributes that should be mutated to dates.
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ] ;
+
+	/**
+	 * Get the belonged transaction instance.
 	 *
-	 * @var array
+	 * @return BelongsTo
 	 */
-	protected $dates = ['created_at', 'updated_at'] ;
+	public function transaction() {
+		return $this->belongsTo(Transaction::class, 'transaction_id', 'id') ;
+	}
 
 	/**
 	 * Determine whether the current payment was
@@ -55,16 +72,4 @@ class PaymentLydia extends Model implements LydiaState {
 	public function isConfirmed() {
 		return $this->hasState(PaymentLydia::PAYMENT_CONFIRMED) ;
 	}
-
-	/**
-	 * Determine whether the current Lydia instance
-	 * has the given state.
-	 *
-	 * @param string $state
-	 * @return bool
-	 */
-	public function hasState(string $state) {
-		return $this->state == $state ;
-	}
-
 }

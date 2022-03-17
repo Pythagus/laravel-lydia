@@ -1,57 +1,36 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
-use Pythagus\LaravelLydia\Models\PaymentLydia;
+use Pythagus\LaravelLydia\Database\AbstractLydiaTable;
 
-/**
- * Class CreatePaymentLydiaTable
- *
- * @author: Damien MOLINA
- */
-class CreatePaymentLydiaTable extends Migration {
+return new class extends AbstractLydiaTable {
 
 	/**
-	 * Get the model table name.
-	 *
-	 * @return string
-	 */
-	private function getTableName() {
-		return app(PaymentLydia::class)->getTable() ;
-	}
-
+     * Model key in the config file.
+     *
+     * @var string
+     */
+    protected $model = 'payment' ;
 
 	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up() {
-		Schema::create($this->getTableName(), function (Blueprint $table) {
-			$table->id();
+     * Structure the given table.
+     *
+     * @param Blueprint $table
+     * @return void
+     */
+    protected function structure(Blueprint $table) {
+		$table->id();
+		$table->unsignedBigInteger('transaction_id') ;
+		$table->tinyInteger('state') ;
+		$table->string('url')->nullable() ;
+		$table->string('transaction_identifier')->nullable() ;
+		$table->string('request_id')->nullable() ;
+		$table->string('request_uuid')->nullable() ;
+		$table->timestamps() ;
 
-			$table->unsignedBigInteger('transaction_id') ;
-			$table->tinyInteger('state') ;
-			$table->string('url')->nullable() ;
-			$table->string('transaction_identifier')->nullable() ;
-			$table->string('request_id')->nullable() ;
-			$table->string('request_uuid')->nullable() ;
-
-			$table->timestamps() ;
-
-			// Should not delete on cascade to preserve the payment.
-			// $table->foreign('transaction_id')->references('id')->on('transactions') ;
-		}) ;
+		// Should not delete on cascade to preserve the payment.
+		$table->foreign('transaction_id')->references('id')->on(
+			$this->tableNameModel('transaction')
+		)->restrictOnDelete() ;
 	}
-
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down() {
-		Schema::dropIfExists($this->getTableName()) ;
-	}
-
-}
+} ;

@@ -36,7 +36,37 @@ class LydiaServiceProvider extends ServiceProvider {
 			LydiaServiceProvider::CONFIG_FILE, $this->packageKey()
 		) ;
 
-		OldLydia::setInstance(new Lydia()) ;
+		OldLydia::setInstance(new class extends OldLydia {
+			/**
+			 * Get the Lydia's configuration.
+			 *
+			 * @return array
+			 */
+			protected function setConfigArray() {
+				return config('lydia') ;
+			}
+
+			/**
+			 * Format the callback URL to be valid
+			 * regarding the Lydia server.
+			 *
+			 * @param string $url
+			 * @return string
+			 */
+			public function formatCallbackUrl(string $url) {
+				return url('/') . '/' . $url ;
+			}
+
+			/**
+			 * Redirect the user to the given route.
+			 *
+			 * @param string $route
+			 * @return mixed
+			 */
+			public function redirect(string $route) {
+				return redirect($route) ;
+			}
+		}) ;
 	}
 
 	/**
@@ -51,8 +81,21 @@ class LydiaServiceProvider extends ServiceProvider {
 		) ;
 
 		// Publish the migration file.
-		$this->publish(__DIR__ . '/Database/CreatePaymentLydiaTable.php',
-			database_path('migrations/' . date('Y_m_d_His', time()) . '_create_payment_lydia_table.php'), 'migration'
+		$time = time() ;
+		$this->publishDatabase('CreateTransactionsTable', 'create_transactions_table', $time) ;
+		$this->publishDatabase('CreatePaymentLydiaTable', 'create_payment_lydia_table', $time + 1) ;
+	}
+
+	/**
+	 * Publish the datatables files.
+	 *
+	 * @param string $file_name
+	 * @param string $destination
+	 * @return void
+	 */
+	private function publishDatabase(string $file_name, string $destination, int $time) {
+		$this->publish(__DIR__ . "/Database/$file_name.php",
+			database_path('migrations/' . date('Y_m_d_His', $time) . "_$destination.php"), 'migration'
 		) ;
 	}
 
@@ -76,5 +119,4 @@ class LydiaServiceProvider extends ServiceProvider {
 	private function publish(string $file, string $destination, string $group = null) {
 		$this->publishes([$file => $destination], $group ? $this->packageKey($group) : null) ;
 	}
-
 }

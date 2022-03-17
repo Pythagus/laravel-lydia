@@ -4,6 +4,20 @@ return [
 
 	/*
 	|--------------------------------------------------------------------------
+	| Lydia models.
+	|--------------------------------------------------------------------------
+	|
+	| This array contains link to themain package models that
+	| you can override to custom them. You need to carefully 
+	| extends these classes to be working.
+	*/
+	'models' => [
+		'payment' 	  => \Pythagus\LaravelLydia\Models\PaymentLydia::class,
+		'transaction' => \Pythagus\LaravelLydia\Models\Transaction::class,
+	],
+
+	/*
+	|--------------------------------------------------------------------------
 	| Lydia main properties
 	|--------------------------------------------------------------------------
 	|
