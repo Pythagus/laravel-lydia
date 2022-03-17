@@ -32,6 +32,16 @@ return [
 
 	/*
 	|--------------------------------------------------------------------------
+	| Lydia enable status.
+	|--------------------------------------------------------------------------
+	|
+	| This value determines whether the website is able to make
+	| Lydia requests.
+	*/
+	'enabled' => (bool) env('LYDIA_ENABLE', false),
+
+	/*
+	|--------------------------------------------------------------------------
 	| Lydia debugging mode
 	|--------------------------------------------------------------------------
 	|
@@ -92,5 +102,4 @@ return [
 		 */
 		'refund' => '/api/transaction/refund.json',
 	],
-
 ];

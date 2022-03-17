@@ -2,8 +2,6 @@
 
 namespace Pythagus\LaravelLydia;
 
-use Pythagus\Lydia\Lydia as BaseLydia;
-
 /**
  * Class Lydia
  * @package Pythagus\LaravelLydia
@@ -22,5 +20,14 @@ class Lydia {
 	 */
 	public function config(string $key, $default = null) {
 		return config('lydia.' . $key, $default) ;
+	}
+
+	/**
+	 * Determine whether Lydia is enabled.
+	 *
+	 * @return bool
+	 */
+	public function enabled() {
+		return $this->config('enabled') ;
 	}
 }
