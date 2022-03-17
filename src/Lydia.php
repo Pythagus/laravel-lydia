@@ -2,6 +2,8 @@
 
 namespace Pythagus\LaravelLydia;
 
+use Pythagus\LaravelLydia\Http\Route;
+
 /**
  * Class Lydia
  * @package Pythagus\LaravelLydia
@@ -45,5 +47,16 @@ class Lydia {
 		}
 
 		return null ;
+	}
+
+	/**
+	 * Create a new routing instance.
+	 *
+	 * @param string $controller
+	 * @param string|null $prefix
+	 * @return Route
+	 */
+	public function routes(string $controller, string $prefix = null) {
+		return new Route($controller, $prefix) ;
 	}
 }
