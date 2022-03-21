@@ -3,6 +3,7 @@
 namespace Pythagus\LaravelLydia;
 
 use Pythagus\LaravelLydia\Http\Route;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Class Lydia
@@ -58,5 +59,22 @@ class Lydia {
 	 */
 	public function routes(string $controller, string $prefix = null) {
 		return new Route($controller, $prefix) ;
+	}
+
+	/**
+	 * Create a new query instance for the
+	 * given model name.
+	 *
+	 * @param string $model
+	 * @return Builder|null
+	 */
+	public function query(string $model) {
+		$class = $this->config('models.' . $model) ;
+
+		if($class) {
+			return $class::query() ;
+		}
+
+		return null ;
 	}
 }

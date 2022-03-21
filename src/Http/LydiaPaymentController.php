@@ -9,7 +9,7 @@ use Pythagus\LaravelLydia\Support\LydiaLog;
 use Pythagus\LaravelLydia\Models\Transaction;
 use Pythagus\LaravelLydia\Models\PaymentLydia;
 use Pythagus\Lydia\Networking\Requests\PaymentRequest;
-use Pythagus\Lydia\Networking\Requests\PaymentStateRequest;
+use Pythagus\LaravelLydia\Support\ManagePaymentResponse;
 
 /**
  * Class LydiaPaymentController
@@ -18,6 +18,8 @@ use Pythagus\Lydia\Networking\Requests\PaymentStateRequest;
  * @author: Damien MOLINA
  */
 abstract class LydiaPaymentController extends Controller {
+
+	use ManagePaymentResponse ;
 
     /**
      * Route called by Lydia when returning from
@@ -83,35 +85,13 @@ abstract class LydiaPaymentController extends Controller {
 	 */
 	protected function response(string $payment_id) {
 		try {
-			/** @var PaymentLydia $payment */
-			$payment     = PaymentLydia::query()->findOrFail($payment_id) ;
-			$transaction = $payment->transaction ;
-
-			// Don't do anything for confirmed or displayed transaction.
-			if($transaction->isConfirmed() || $transaction->displayed) {
-				return $transaction ;
-			}
-
-			$transaction->displayed = true ;
-			$payment->transaction_identifier = $this->getTransactionIdentifier() ;
-
-			if(! is_null($payment->request_uuid)) {
-				$request = new PaymentStateRequest($payment->request_uuid) ;
-				$payment->state = $request->execute() ;
-				$payment->save() ;
-
-				if($payment->isConfirmed()) {
-					$transaction->state = Transaction::CONFIRMED ;
-				}
-			}
-
-			$transaction->save() ;
-
-			return $this->onResponseSuccess($transaction) ;
+			return $this->onResponseSuccess(
+				$this->_manageResponse($payment_id)
+			) ;
 		} catch(Throwable $throwable) {
 			LydiaLog::report($throwable) ;
 
-            return $this->onResponseFail($throwable, $transaction) ;
+            return $this->onResponseFail($throwable) ;
 		}
 	}
 
@@ -131,19 +111,5 @@ abstract class LydiaPaymentController extends Controller {
 	 */
 	protected function onResponseFail(Throwable $throwable) {
 		throw $throwable ;
-	}
-
-	/**
-	 * We are trying to take the transaction_identifier
-	 * token in the GET Lydia's response.
-	 *
-	 * @return string|null
-	 */
-	protected function getTransactionIdentifier() {
-		try {
-			return $_GET['transaction'] ?? null ;
-		} catch(Throwable $ignored) {
-			return null ;
-		}
 	}
 }
