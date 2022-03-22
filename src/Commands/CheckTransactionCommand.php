@@ -44,15 +44,28 @@ abstract class CheckTransactionCommand extends Command {
 	abstract protected function manageValidTransaction($transaction) ;
 
 	/**
+	 * The start date of checked transaction
+	 * regarding their created_at date.
+	 *
+	 * @return Carbon
+	 */
+	abstract protected function startDate() ;
+
+	/**
+	 * The end date of checked transaction
+	 * regarding their created_at date.
+	 *
+	 * @return Carbon
+	 */
+	abstract protected function endDate() ;
+
+	/**
 	 * Manage a refused transaction.
 	 *
 	 * @param Transaction $transaction
 	 * @return void
 	 */
-	protected function manageRefusedTransaction($transaction) {
-		$transaction->state = Transaction::CANCELED ;
-		$transaction->save() ;
-	}
+	abstract protected function manageRefusedTransaction($transaction) ;
 
 	/**
 	 * Check whether a transaction is valid or not.
@@ -66,39 +79,18 @@ abstract class CheckTransactionCommand extends Command {
 			/** @var PaymentLydia $payment */
 			$payment = $transaction->payments->sortByDesc('created_at')->first() ;
 
-			if($payment && $payment->hasState(LydiaState::WAITING_PAYMENT)) {
+			if($payment) {
 				$transaction = $this->_manageResponse($payment->id) ;
 
 				if($transaction->isConfirmed()) {
-					$this->manageValidTransaction($transaction) ;
-					return ;
+					return $this->manageValidTransaction($transaction) ;
 				}
 			}
 
 			$this->manageRefusedTransaction($transaction) ;
 		} catch(Throwable $throwable) {
-			$this->warn("WARN : " . $throwable) ;
+			$this->warn($throwable) ;
 		}
-	}
-
-	/**
-	 * The start date of checked transaction
-	 * regarding their created_at date.
-	 *
-	 * @return Carbon
-	 */
-	protected function startDate() {
-		return now()->subDays(2) ;
-	}
-
-	/**
-	 * The end date of checked transaction
-	 * regarding their created_at date.
-	 *
-	 * @return Carbon
-	 */
-	protected function endDate() {
-		return now()->subDay() ;
 	}
 
 	/**

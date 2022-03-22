@@ -74,4 +74,14 @@ class PaymentLydia extends Model implements LydiaState {
 	public function isConfirmed() {
 		return $this->hasState(PaymentLydia::PAYMENT_CONFIRMED) ;
 	}
+
+	/**
+	 * Determine whether the current payment is
+	 * waiting for a Lydia response.
+	 *
+	 * @return bool
+	 */
+	public function isWaiting() {
+		return $this->hasState(PaymentLydia::WAITING_PAYMENT) ;
+	}
 }

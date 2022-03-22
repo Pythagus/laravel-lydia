@@ -5,7 +5,7 @@ namespace Pythagus\LaravelLydia\Http;
 use Throwable;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
-use Pythagus\LaravelLydia\Log\LydiaLog;
+use Pythagus\LaravelLydia\Support\LydiaLog;
 use Pythagus\LaravelLydia\Models\Transaction;
 use Pythagus\LaravelLydia\Models\PaymentLydia;
 use Pythagus\Lydia\Networking\Requests\PaymentRequest;
@@ -46,7 +46,7 @@ abstract class LydiaPaymentController extends Controller {
 
 			// Make the request
 			$request = new PaymentRequest() ;
-			$request->setFinishCallback($this->callback_route . '/' . $lydia->id) ;
+			$request->setFinishCallback($this->callback_route . "/lydia/" . $lydia->id) ;
 			$data = $request->execute([
 				'message'   => $message,
 				'recipient' => $transaction->email,

@@ -5,6 +5,8 @@ namespace Pythagus\LaravelLydia\Support;
 /**
  * Trait used to describe a stateful object.
  * 
+ * @property string state
+ * 
  * @author Damien MOLINA
  */
 trait HasState {

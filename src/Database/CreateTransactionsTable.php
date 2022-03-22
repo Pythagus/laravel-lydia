@@ -29,7 +29,6 @@ return new class extends AbstractLydiaTable {
         $table->string('first_name') ;
         $table->string('last_name') ;
         $table->string('email') ;
-        $table->boolean('displayed')->default(false) ;
         $table->tinyInteger('state') ;
         $table->double('total_amount', 8, 2) ;
 

@@ -29,25 +29,31 @@ trait ManagePaymentResponse {
 		$payment     = lydia()->query('payment')->findOrFail($payment_id) ;
 		$transaction = $payment->transaction ;
 
-		// Don't do anything for confirmed or displayed transaction.
-		if($transaction->isConfirmed() || (! $transaction->isWaiting() && $transaction->displayed)) {
-			return $transaction ;
-		}
-
-		$transaction->displayed = true ;
-		$payment->transaction_identifier = $this->getTransactionIdentifier() ;
-
-		if(! is_null($payment->request_uuid)) {
-			$request = new PaymentStateRequest($payment->request_uuid) ;
-			$payment->state = $request->execute() ;
-			$payment->save() ;
-
+		// Don't do anything for confirmed.
+		if(! $transaction->isConfirmed()) {
+			// If the payment is already confirmed.
 			if($payment->isConfirmed()) {
 				$transaction->state = Transaction::CONFIRMED ;
-			}
-		}
 
-		$transaction->save() ;
+			// Else, if the payment is waiting for Lydia response and has a request_uuid.
+			} else if($payment->isWaiting() && ! empty($payment->request_uuid)) {
+				$payment->transaction_identifier = $this->getTransactionIdentifier() ;
+
+				// Make a state request.
+				$request = new PaymentStateRequest($payment->request_uuid) ;
+				$payment->state = $request->execute() ;
+				$payment->save() ;
+
+				// Finally check the payment state.
+				if($payment->isConfirmed()) {
+					$transaction->state = Transaction::CONFIRMED ;
+				} else {
+					$transaction->state = Transaction::CANCELED ;
+				}
+			}
+
+			$transaction->save() ;
+		}
 
 		return $transaction ;
 	}
