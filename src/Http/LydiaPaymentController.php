@@ -21,13 +21,13 @@ abstract class LydiaPaymentController extends Controller {
 
 	use ManagePaymentResponse ;
 
-    /**
-     * Route called by Lydia when returning from
-     * payment page.
-     *
-     * @var string
-     */
-    protected $callback_route ;
+	/**
+	 * Route called by Lydia when returning from
+	 * payment page.
+	 *
+	 * @var string
+	 */
+	protected $callback_route ;
 
 	/**
 	 * Make a request to the Lydia API.
@@ -36,8 +36,8 @@ abstract class LydiaPaymentController extends Controller {
 	 * @param string $message
 	 * @return RedirectResponse
 	 */
-    protected function request(Transaction $transaction, string $message) {
-        try {
+	protected function request(Transaction $transaction, string $message) {
+		try {
 			// Prepare the payment.
 			$lydia = new PaymentLydia() ;
 			$lydia->state = PaymentLydia::WAITING_PAYMENT ;
@@ -59,12 +59,12 @@ abstract class LydiaPaymentController extends Controller {
 
 			// Redirect the user
 			return $request->redirect() ;
-        } catch(Throwable $throwable) {
-            LydiaLog::report($throwable) ;
+		} catch(Throwable $throwable) {
+			LydiaLog::report($throwable) ;
 
-            return $this->onRequestFail($throwable, $transaction) ;
-        }
-    }
+			return $this->onRequestFail($throwable, $transaction) ;
+		}
+	}
 
 	/**
 	 * Make something when the Lydia request call failed.

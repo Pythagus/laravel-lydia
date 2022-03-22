@@ -31,7 +31,7 @@ class Lydia {
 	 * @return bool
 	 */
 	public function enabled() {
-		return $this->config('enabled') ;
+		return $this->config('enabled', false) ;
 	}
 
 	/**
