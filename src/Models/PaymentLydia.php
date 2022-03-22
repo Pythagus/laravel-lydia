@@ -6,12 +6,14 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Pythagus\Lydia\Contracts\LydiaState;
 use Pythagus\LaravelLydia\Support\HasState;
+use Pythagus\LaravelLydia\Support\HasLongIdentifier;
 
 /**
  * Class PaymentLydia
  * @package Pythagus\LaravelLydia\Models
  *
  * @property int    id
+ * @property string long_id
  * @property string url
  * @property string transaction_identifier
  * @property string state
@@ -26,7 +28,7 @@ use Pythagus\LaravelLydia\Support\HasState;
  */
 class PaymentLydia extends Model implements LydiaState {
 
-	use HasState ;
+	use HasState, HasLongIdentifier ;
 
 	/**
 	 * The table associated with the model.

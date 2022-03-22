@@ -4,8 +4,10 @@ namespace Pythagus\LaravelLydia\Database;
 
 use RuntimeException;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Pythagus\LaravelLydia\Support\HasLongIdentifier;
 
 /**
  * Base Lydia table for every datatables.
@@ -54,19 +56,44 @@ abstract class AbstractLydiaTable extends Migration {
 	}
 
     /**
+     * Get a model instance.
+     *
+     * @param string $model
+     * @return Model
+     */
+    private function getModelInstance(string $model) {
+        $class = lydia()->config('models.' . $model);
+
+        if($class) {
+            return app($class) ;
+        }
+
+        throw new RuntimeException("Unknown model $model");
+    }
+
+    /**
      * Get the table name for the given model config key.
      *
      * @param string $model
      * @return void
      */
     protected function tableNameModel(string $model) {
-        $class = lydia()->config('models.' . $model) ;
+        return $this->getModelInstance($model)->getTable() ;
+    }
 
-        if($class) {
-            return app($class)->getTable() ;
-        }
+    /**
+     * Add the long_id column to the table.
+     *
+     * @param Blueprint $table
+     * @return void
+     */
+    protected function longIdColumn(Blueprint $table) {
+        /** @var HasLongIdentifier $instance */
+        $instance = $this->getModelInstance($this->model) ;
 
-        throw new RuntimeException("Unknown model $model") ;
+        $table->string(
+            $instance->getRouteKeyName(), $instance->getLongKeyLength()
+        ) ;
     }
 
 	/**

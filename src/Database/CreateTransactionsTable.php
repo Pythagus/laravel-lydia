@@ -25,7 +25,8 @@ return new class extends AbstractLydiaTable {
      */
     protected function structure(Blueprint $table) {
         $table->id() ;
-
+        $this->longIdColumn($table) ;
+        
         $table->string('first_name') ;
         $table->string('last_name') ;
         $table->string('email') ;

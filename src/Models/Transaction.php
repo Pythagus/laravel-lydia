@@ -7,12 +7,14 @@ use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Pythagus\LaravelLydia\Support\HasState;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Pythagus\LaravelLydia\Support\HasLongIdentifier;
 
 /**
  * Class Transaction
  * @package Pythagus\LaravelLydia\Models
  *
  * @property int    id
+ * @property string long_id
  * @property string first_name
  * @property string last_name
  * @property string email
@@ -28,7 +30,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Transaction extends Model {
 
-	use HasState ;
+	use HasState, HasLongIdentifier ;
 
 	/**
 	 * The transaction is waiting for a response or cancelled

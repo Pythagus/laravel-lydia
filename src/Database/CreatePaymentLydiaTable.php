@@ -19,7 +19,9 @@ return new class extends AbstractLydiaTable {
      * @return void
      */
     protected function structure(Blueprint $table) {
-		$table->id();
+		$table->id() ;
+		$this->longIdColumn($table) ;
+		
 		$table->unsignedBigInteger('transaction_id') ;
 		$table->tinyInteger('state') ;
 		$table->string('url')->nullable() ;
