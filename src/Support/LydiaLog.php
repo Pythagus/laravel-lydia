@@ -1,6 +1,6 @@
 <?php
 
-namespace Pythagus\LaravelLydia\Log;
+namespace Pythagus\LaravelLydia\Support;
 
 use Closure;
 use Throwable;
@@ -10,7 +10,7 @@ use Pythagus\Lydia\Contracts\LydiaException;
 
 /**
  * Class LydiaLog
- * @package Pythagus\LaravelLydia\Log
+ * @package Pythagus\LaravelLydia\Support
  *
  * @property string file
  *
