@@ -3,6 +3,7 @@
 namespace Pythagus\LaravelLydia\Http;
 
 use Throwable;
+use Illuminate\View\View;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Pythagus\LaravelLydia\Support\LydiaLog;
@@ -22,12 +23,11 @@ abstract class LydiaPaymentController extends Controller {
 	use ManagePaymentResponse ;
 
 	/**
-	 * Route called by Lydia when returning from
-	 * payment page.
+	 * URL prefix used to redirect Lydia responses.
 	 *
 	 * @var string
 	 */
-	protected $callback_route ;
+	protected $prefix ;
 
 	/**
 	 * Make a request to the Lydia API.
@@ -36,7 +36,7 @@ abstract class LydiaPaymentController extends Controller {
 	 * @param string $message
 	 * @return RedirectResponse
 	 */
-	protected function request(Transaction $transaction, string $message) {
+	public function request(Transaction $transaction, string $message = "") {
 		try {
 			// Prepare the payment.
 			/** @var PaymentLydia $lydia */
@@ -48,7 +48,7 @@ abstract class LydiaPaymentController extends Controller {
 
 			// Make the request
 			$request = new PaymentRequest() ;
-			$request->setFinishCallback($this->callback_route . "/lydia/" . $lydia->id) ;
+			$request->setFinishCallback($this->prefix . '/lydia/' . $lydia->getRouteKey()) ;
 			$data = $request->execute([
 				'message'   => $message,
 				'recipient' => $transaction->email,
@@ -59,7 +59,7 @@ abstract class LydiaPaymentController extends Controller {
 			$lydia->fill($data) ;
 			$lydia->save() ;
 
-			// Redirect the user
+			// Redirect the user to the Lydia website.
 			return $request->redirect() ;
 		} catch(Throwable $throwable) {
 			LydiaLog::report($throwable) ;
@@ -69,26 +69,17 @@ abstract class LydiaPaymentController extends Controller {
 	}
 
 	/**
-	 * Make something when the Lydia request call failed.
-	 *
-	 * @param Throwable $throwable
-	 * @param Transaction $transaction
-	 * @return mixed
-	 */
-	protected function onRequestFail(Throwable $throwable, Transaction $transaction) {
-		throw $throwable ;
-	}
-
-	/**
 	 * Manage the incoming Lydia response.
 	 *
 	 * @param string $payment_id
 	 * @return mixed
 	 */
-	protected function response(string $payment_id) {
+	public function response(string $payment_id) {
 		try {
-			return $this->onResponseSuccess(
-				$this->_manageResponse($payment_id)
+			$transaction = $this->_manageResponse($payment_id) ;
+
+			return redirect(
+				$this->prefix . '/transaction/' . $transaction->getRouteKey()
 			) ;
 		} catch(Throwable $throwable) {
 			LydiaLog::report($throwable) ;
@@ -98,12 +89,34 @@ abstract class LydiaPaymentController extends Controller {
 	}
 
 	/**
+	 * Display the transaction result to the user.
+	 * 
+	 * @param string $long_id : transaction long identifier.
+	 * @return View
+	 */
+	public function display($long_id) {
+		var_dump($long_id) ;
+	}
+
+	/**
+	 * Make something when the Lydia request call failed.
+	 *
+	 * @param Throwable $throwable
+	 * @param Transaction $transaction
+	 * @return mixed
+	 */
+	protected function onRequestFail(Throwable $throwable, $transaction) {
+		throw $throwable ;
+	}
+
+	/**
 	 * Do something when a successfully managed Lydia response came.
 	 * 
+	 * @param Transaction $transaction
 	 * @return mixed.
 	 */
-	protected function onResponseSuccess(Transaction $transaction) {
-		//
+	protected function onResponseSuccess($transaction) {
+		// 
 	}
 
 	/**

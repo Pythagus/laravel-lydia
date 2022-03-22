@@ -34,7 +34,25 @@ trait HasLongIdentifier {
      * @return string
      */
     public function getRouteKeyName() {
+        return $this->getLongIdentifierName() ;
+    }
+
+    /**
+     * Get the long identifier name.
+     *
+     * @return string
+     */
+    public function getLongIdentifierName() {
         return $this->longKey ;
+    }
+
+    /**
+     * Get the long identifier value.
+     *
+     * @return string
+     */
+    public function getLongIdentifier() {
+        return $this->getAttribute($this->longKey) ;
     }
 
     /**

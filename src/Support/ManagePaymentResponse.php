@@ -26,7 +26,7 @@ trait ManagePaymentResponse {
 	 */
     protected function _manageResponse(string $payment_id) {
 		/** @var PaymentLydia $payment */
-		$payment     = lydia()->query('payment')->findOrFail($payment_id) ;
+		$payment     = lydia()->query('payment')->where('long_id', $payment_id)->firstOrFail() ;
 		$transaction = $payment->transaction ;
 
 		// Don't do anything for confirmed.

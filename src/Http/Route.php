@@ -42,10 +42,13 @@ class Route {
      *
      * @param string $method
      * @param string $uri
+     * @param string|array $methods
      * @return void
      */
-    private function setupRoute(string $method, string $uri) {
-        RoutingFacade::match(['get', 'post'], ($this->prefix ? $this->prefix . '/' : '') . $uri, $this->controller . '@' . $method) ;
+    private function setupRoute(string $controllerMethod, string $uri, $methods = ['get', 'post']) {
+        RoutingFacade::match(
+            $methods, ($this->prefix ? $this->prefix . '/' : '') . $uri, $this->controller . '@' . $controllerMethod
+        ) ;
     }
 
     /**
@@ -53,7 +56,14 @@ class Route {
      *
      * @return void
      */
-    public function payments() {
-        $this->setupRoute('response', 'lydia/{payment_id}') ;
+    public function payments(array $options = []) {
+        if($options['response'] ?? true) {
+            $this->setupRoute('response', 'lydia/{payment_id}') ;
+        }
+
+        if($options['display'] ?? true) {
+            $key = lydia()->instance('transaction')->getRouteKeyName() ;
+            $this->setupRoute('display', 'transaction/{' . $key . '}', 'get') ;
+        }
     }
 }
