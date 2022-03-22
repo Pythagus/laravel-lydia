@@ -5,7 +5,7 @@ namespace Pythagus\LaravelLydia\Http;
 use Throwable;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
-use Pythagus\LaravelLydia\Support\LydiaLog;
+use Pythagus\LaravelLydia\Log\LydiaLog;
 use Pythagus\LaravelLydia\Models\Transaction;
 use Pythagus\LaravelLydia\Models\PaymentLydia;
 use Pythagus\Lydia\Networking\Requests\PaymentRequest;
