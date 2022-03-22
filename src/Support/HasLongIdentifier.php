@@ -15,18 +15,11 @@ use Illuminate\Support\Str;
 trait HasLongIdentifier {
 
     /**
-     * Long key in the database.
-     *
-     * @var string
-     */
-    protected $longKey = 'long_id' ;
-
-    /**
-     * Size of the long key.
+     * Size of the long identifier.
      *
      * @var integer
      */
-    protected $longKeyLength = 50 ;
+    protected $longIdentifierLength = 50 ;
 
     /**
      * Change the route key name for the pack.
@@ -34,25 +27,7 @@ trait HasLongIdentifier {
      * @return string
      */
     public function getRouteKeyName() {
-        return $this->getLongIdentifierName() ;
-    }
-
-    /**
-     * Get the long identifier name.
-     *
-     * @return string
-     */
-    public function getLongIdentifierName() {
-        return $this->longKey ;
-    }
-
-    /**
-     * Get the long identifier value.
-     *
-     * @return string
-     */
-    public function getLongIdentifier() {
-        return $this->getAttribute($this->longKey) ;
+        return 'long_id' ;
     }
 
     /**
@@ -60,8 +35,8 @@ trait HasLongIdentifier {
      *
      * @return integer
      */
-    public function getLongKeyLength() {
-        return $this->longKeyLength ;
+    public function getLongIdentifierLength() {
+        return $this->longIdentifierLength ;
     }
 
     /**
@@ -72,7 +47,7 @@ trait HasLongIdentifier {
      */
     public function generateLongId() {
         do {
-            $key = Str::random($this->longKeyLength) ;
+            $key = Str::random($this->longIdentifierLength) ;
         } while(self::query()->where('long_id', $key)->exists()) ;
 
         $this->long_id = $key ;

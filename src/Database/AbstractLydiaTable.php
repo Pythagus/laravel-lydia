@@ -91,9 +91,7 @@ abstract class AbstractLydiaTable extends Migration {
         /** @var HasLongIdentifier $instance */
         $instance = $this->getModelInstance($this->model) ;
 
-        $table->string(
-            $instance->getRouteKeyName(), $instance->getLongKeyLength()
-        ) ;
+        $table->string('long_id', $instance->getLongIdentifierLength()) ;
     }
 
 	/**

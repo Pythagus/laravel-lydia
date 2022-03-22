@@ -48,7 +48,7 @@ abstract class LydiaPaymentController extends Controller {
 
 			// Make the request
 			$request = new PaymentRequest() ;
-			$request->setFinishCallback($this->prefix . '/lydia/' . $lydia->getRouteKey()) ;
+			$request->setFinishCallback($this->prefix . '/lydia/' . $lydia->long_id) ;
 			$data = $request->execute([
 				'message'   => $message,
 				'recipient' => $transaction->email,
@@ -79,7 +79,7 @@ abstract class LydiaPaymentController extends Controller {
 			$transaction = $this->_manageResponse($payment_id) ;
 
 			return redirect(
-				$this->prefix . '/transaction/' . $transaction->getRouteKey()
+				$this->prefix . '/transaction/' . $transaction->long_id
 			) ;
 		} catch(Throwable $throwable) {
 			LydiaLog::report($throwable) ;

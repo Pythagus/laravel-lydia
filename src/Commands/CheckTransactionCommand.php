@@ -5,7 +5,6 @@ namespace Pythagus\LaravelLydia\Commands;
 use Throwable;
 use Illuminate\Support\Carbon;
 use Illuminate\Console\Command;
-use Pythagus\Lydia\Contracts\LydiaState;
 use Illuminate\Database\Eloquent\Builder;
 use Pythagus\LaravelLydia\Models\Transaction;
 use Pythagus\LaravelLydia\Models\PaymentLydia;
