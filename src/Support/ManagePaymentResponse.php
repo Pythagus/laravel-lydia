@@ -2,7 +2,7 @@
 
 namespace Pythagus\LaravelLydia\Support;
 
-use Throwable;
+use Pythagus\Lydia\Traits\LydiaTools;
 use Pythagus\LaravelLydia\Models\Transaction;
 use Pythagus\LaravelLydia\Models\PaymentLydia;
 use Pythagus\Lydia\Networking\Requests\PaymentStateRequest;
@@ -15,6 +15,8 @@ use Pythagus\Lydia\Networking\Requests\PaymentStateRequest;
  */
 trait ManagePaymentResponse {
 
+	use LydiaTools ;
+
 	/**
 	 * Manage the incoming payment response
 	 * updating the Transaction instance.
@@ -24,7 +26,7 @@ trait ManagePaymentResponse {
 	 */
     protected function _manageResponse(string $payment_id) {
 		/** @var PaymentLydia $payment */
-		$payment     = PaymentLydia::query()->findOrFail($payment_id) ;
+		$payment     = lydia()->query('payment')->findOrFail($payment_id) ;
 		$transaction = $payment->transaction ;
 
 		// Don't do anything for confirmed or displayed transaction.
@@ -48,19 +50,5 @@ trait ManagePaymentResponse {
 		$transaction->save() ;
 
 		return $transaction ;
-	}
-    
-	/**
-	 * We are trying to take the transaction_identifier
-	 * token in the GET Lydia's response.
-	 *
-	 * @return string|null
-	 */
-	protected function getTransactionIdentifier() {
-		try {
-			return $_GET['transaction'] ?? null ;
-		} catch(Throwable $ignored) {
-			return null ;
-		}
 	}
 }
