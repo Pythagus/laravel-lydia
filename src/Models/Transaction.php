@@ -92,7 +92,9 @@ class Transaction extends Model {
 	 * @return HasMany
 	 */
 	public function payments() {
-		return $this->hasMany(PaymentLydia::class, 'transaction_id') ;
+		return $this->hasMany(
+			lydia()->config('models.payment'), 'transaction_id'
+		) ;
 	}
 
 	/**

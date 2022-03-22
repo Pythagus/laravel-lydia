@@ -60,7 +60,9 @@ class PaymentLydia extends Model implements LydiaState {
 	 * @return BelongsTo
 	 */
 	public function transaction() {
-		return $this->belongsTo(Transaction::class, 'transaction_id', 'id') ;
+		return $this->belongsTo(
+			lydia()->config('models.transaction'), 'transaction_id', 'id'
+		) ;
 	}
 
 	/**
