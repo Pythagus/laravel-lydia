@@ -12,29 +12,29 @@ use Illuminate\Support\Facades\Route as RoutingFacade;
  */
 class Route {
 
-	/**
-	 * Controller name.
-	 *
-	 * @var string
-	 */
-	private $controller ;
+    /**
+     * Controller name.
+     *
+     * @var string
+     */
+    private $controller ;
 
-	/**
-	 * Route prefix.
-	 *
-	 * @var string
-	 */
-	private $prefix ;
+    /**
+     * Route prefix.
+     *
+     * @var string
+     */
+    private $prefix ;
 
-	/**
-	 * Make a new route instance.
-	 *
-	 * @param string $controller
-	 * @param string|null $prefix
-	 */
+    /**
+     * Make a new route instance.
+     *
+     * @param string $controller
+     * @param string|null $prefix
+     */
     public function __construct(string $controller, string $prefix = null) {
         $this->controller = $controller ;
-		$this->prefix     = $prefix ;
+        $this->prefix     = $prefix ;
     }
 
     /**

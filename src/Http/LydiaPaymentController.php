@@ -66,16 +66,16 @@ abstract class LydiaPaymentController extends Controller {
         }
     }
 
-    /**
-     * Make something when the Lydia request call failed.
-     *
-     * @param Throwable $throwable
-     * @param Transaction $transaction
-     * @return mixed
-     */
-    protected function onRequestFail(Throwable $throwable, Transaction $transaction) {
-        throw $throwable ;
-    }
+	/**
+	 * Make something when the Lydia request call failed.
+	 *
+	 * @param Throwable $throwable
+	 * @param Transaction $transaction
+	 * @return mixed
+	 */
+	protected function onRequestFail(Throwable $throwable, Transaction $transaction) {
+		throw $throwable ;
+	}
 
 	/**
 	 * Manage the incoming Lydia response.
@@ -91,7 +91,7 @@ abstract class LydiaPaymentController extends Controller {
 		} catch(Throwable $throwable) {
 			LydiaLog::report($throwable) ;
 
-            return $this->onResponseFail($throwable) ;
+			return $this->onResponseFail($throwable) ;
 		}
 	}
 
