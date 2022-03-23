@@ -4,9 +4,7 @@ namespace Pythagus\LaravelLydia\Http;
 
 use Throwable;
 use Illuminate\View\View;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
-use Pythagus\LaravelLydia\Support\LydiaLog;
 use Pythagus\LaravelLydia\Models\Transaction;
 use Pythagus\LaravelLydia\Models\PaymentLydia;
 use Pythagus\Lydia\Networking\Requests\PaymentRequest;
@@ -18,7 +16,7 @@ use Pythagus\LaravelLydia\Support\ManagePaymentResponse;
  *
  * @author: Damien MOLINA
  */
-abstract class LydiaPaymentController extends Controller {
+abstract class LydiaPaymentController extends LydiaController {
 
 	use ManagePaymentResponse ;
 
@@ -62,9 +60,9 @@ abstract class LydiaPaymentController extends Controller {
 			// Redirect the user to the Lydia website.
 			return $request->redirect() ;
 		} catch(Throwable $throwable) {
-			LydiaLog::report($throwable) ;
-
-			return $this->onRequestFail($throwable, $transaction) ;
+			return $this->onRequestFail(
+				$this->manageThrowable($throwable), $transaction
+			) ;
 		}
 	}
 
@@ -82,9 +80,9 @@ abstract class LydiaPaymentController extends Controller {
 				$this->prefix . '/transaction/' . $transaction->long_id
 			) ;
 		} catch(Throwable $throwable) {
-			LydiaLog::report($throwable) ;
-
-			return $this->onResponseFail($throwable) ;
+			return $this->onResponseFail(
+				$this->manageThrowable($throwable)
+			) ;
 		}
 	}
 

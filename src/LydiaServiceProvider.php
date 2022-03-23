@@ -27,6 +27,13 @@ class LydiaServiceProvider extends ServiceProvider {
 	private const CONFIG_FILE = __DIR__ . '/config/lydia.php' ;
 
 	/**
+	 * Default translation file.
+	 *
+	 * @const string
+	 */
+	private const TRANSLATION_FILE = __DIR__ . '/lang' ;
+
+	/**
 	 * Register the service provider.
 	 *
 	 * @return void
@@ -80,7 +87,13 @@ class LydiaServiceProvider extends ServiceProvider {
 			LydiaServiceProvider::CONFIG_FILE, config_path($this->packageKey().'.php'), 'config'
 		) ;
 
-		// Publish the migration file.
+		// Publish the lang files.
+		$this->loadTranslationsFrom(__DIR__ . '/lang', $this->packageKey()) ;
+		$this->publish(
+			LydiaServiceProvider::TRANSLATION_FILE, lang_path('vendor/' . $this->packageKey()), 'translation'
+		) ;
+
+		// Publish the migration files.
 		$time = time() ;
 		$this->publishDatabase('CreateTransactionsTable', 'create_transactions_table', $time) ;
 		$this->publishDatabase('CreatePaymentLydiaTable', 'create_payment_lydia_table', $time + 1) ;
