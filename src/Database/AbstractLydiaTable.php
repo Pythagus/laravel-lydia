@@ -38,12 +38,12 @@ abstract class AbstractLydiaTable extends Migration {
      */
     abstract protected function structure(Blueprint $table) ;
 
-	/**
-	 * Get the model table name.
-	 *
-	 * @return string
-	 */
-	private function getTableName() {
+    /**
+     * Get the model table name.
+     *
+     * @return string
+     */
+    private function getTableName() {
         if(is_null($this->table)) {
             if(is_null($this->model)) {
                 throw new RuntimeException("Null model key") ;
@@ -53,7 +53,7 @@ abstract class AbstractLydiaTable extends Migration {
         }
 
         return $this->table ;
-	}
+    }
 
     /**
      * Get a model instance.
@@ -94,23 +94,23 @@ abstract class AbstractLydiaTable extends Migration {
         $table->string('long_id', $instance->getLongIdentifierLength()) ;
     }
 
-	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up() {
-		Schema::create($this->getTableName(), function(Blueprint $table) {
-			$this->structure($table) ;
-		}) ;
-	}
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up() {
+        Schema::create($this->getTableName(), function(Blueprint $table) {
+            $this->structure($table) ;
+        }) ;
+    }
 
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down() {
-		Schema::dropIfExists($this->getTableName()) ;
-	}
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down() {
+        Schema::dropIfExists($this->getTableName()) ;
+    }
 }

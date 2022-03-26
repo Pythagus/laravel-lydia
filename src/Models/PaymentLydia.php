@@ -28,25 +28,25 @@ use Pythagus\LaravelLydia\Support\HasLongIdentifier;
  */
 class PaymentLydia extends Model implements LydiaState {
 
-	use HasState, HasLongIdentifier ;
+    use HasState, HasLongIdentifier ;
 
-	/**
-	 * The table associated with the model.
-	 *
-	 * @var string
-	 */
-	protected $table = 'payment_lydia' ;
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'payment_lydia' ;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var array
-	 */
-	protected $fillable = [
-		'transaction_id', 'transaction_identifier', 'state', 'url', 'request_id', 'request_uuid'
-	] ;
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'transaction_id', 'transaction_identifier', 'state', 'url', 'request_id', 'request_uuid'
+    ] ;
 
-	/**
+    /**
      * The attributes that should be cast.
      *
      * @var array<string, string>
@@ -56,34 +56,34 @@ class PaymentLydia extends Model implements LydiaState {
         'updated_at' => 'datetime',
     ] ;
 
-	/**
-	 * Get the belonged transaction instance.
-	 *
-	 * @return BelongsTo
-	 */
-	public function transaction() {
-		return $this->belongsTo(
-			lydia()->config('models.transaction'), 'transaction_id', 'id'
-		) ;
-	}
+    /**
+     * Get the belonged transaction instance.
+     *
+     * @return BelongsTo
+     */
+    public function transaction() {
+        return $this->belongsTo(
+            lydia()->config('models.transaction'), 'transaction_id', 'id'
+        ) ;
+    }
 
-	/**
-	 * Determine whether the current payment was
-	 * confirmed by Lydia.
-	 *
-	 * @return bool
-	 */
-	public function isConfirmed() {
-		return $this->hasState(PaymentLydia::PAYMENT_CONFIRMED) ;
-	}
+    /**
+     * Determine whether the current payment was
+     * confirmed by Lydia.
+     *
+     * @return bool
+     */
+    public function isConfirmed() {
+        return $this->hasState(PaymentLydia::PAYMENT_CONFIRMED) ;
+    }
 
-	/**
-	 * Determine whether the current payment is
-	 * waiting for a Lydia response.
-	 *
-	 * @return bool
-	 */
-	public function isWaiting() {
-		return $this->hasState(PaymentLydia::WAITING_PAYMENT) ;
-	}
+    /**
+     * Determine whether the current payment is
+     * waiting for a Lydia response.
+     *
+     * @return bool
+     */
+    public function isWaiting() {
+        return $this->hasState(PaymentLydia::WAITING_PAYMENT) ;
+    }
 }

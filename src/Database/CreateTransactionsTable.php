@@ -10,7 +10,7 @@ use Pythagus\LaravelLydia\Database\AbstractLydiaTable;
  */
 return new class extends AbstractLydiaTable {
 
-	/**
+    /**
      * Model key in the config file.
      *
      * @var string
