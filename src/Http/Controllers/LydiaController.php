@@ -4,6 +4,7 @@ namespace Pythagus\LaravelLydia\Http\Controllers;
 
 use Throwable;
 use App\Http\Controllers\Controller;
+use Pythagus\LaravelLydia\Exceptions\TransactionFailedException;
 use Pythagus\LaravelLydia\Support\LydiaLog;
 use Pythagus\Lydia\Exceptions\LydiaErrorResponseException;
 
@@ -14,6 +15,16 @@ use Pythagus\Lydia\Exceptions\LydiaErrorResponseException;
  * @author: Damien MOLINA
  */
 abstract class LydiaController extends Controller {
+
+    /**
+     * Determine all the throwables that won't
+     * be reported.
+     *
+     * @var array
+     */
+    protected $ignoredThrowables = [
+        TransactionFailedException::class,
+    ] ;
 
     /**
      * URL prefix used to redirect Lydia responses.
@@ -39,9 +50,9 @@ abstract class LydiaController extends Controller {
      * @return Throwable
      */
     protected function manageThrowable(Throwable $throwable) {
-        LydiaLog::report($throwable) ;
-
-        $throwable->message = $this->getThrowableMessage($throwable) ;
+        if(! in_array(get_class($throwable), $this->ignoredThrowables)) {
+            LydiaLog::report($throwable) ;
+        }
 
         return $throwable ;
     }

@@ -3,12 +3,12 @@
 namespace Pythagus\LaravelLydia\Http\Controllers;
 
 use Throwable;
-use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Pythagus\Lydia\Http\PaymentRequest;
 use Pythagus\LaravelLydia\Models\Transaction;
 use Pythagus\LaravelLydia\Models\PaymentLydia;
 use Pythagus\LaravelLydia\Http\Traits\HasPaymentResponse;
+use Pythagus\LaravelLydia\Exceptions\TransactionFailedException;
 
 /**
  * Class PaymentController
@@ -69,26 +69,16 @@ abstract class PaymentController extends LydiaController {
         try {
             $transaction = $this->manageResponse($payment_id) ;
 
-            $this->onResponseSuccess($transaction) ;
+            if(! $transaction->isConfirmed()) {
+                throw new TransactionFailedException() ;
+            }
 
-            return redirect(
-                $this->getPrefix() . '/transaction/' . $transaction->long_id
-            ) ;
+            return $this->onResponseSuccess($transaction) ;
         } catch(Throwable $throwable) {
             return $this->onResponseFail(
                 $this->manageThrowable($throwable)
             ) ;
         }
-    }
-
-    /**
-     * Display the transaction result to the user.
-     * 
-     * @param string $long_id : transaction long identifier.
-     * @return View
-     */
-    public function display($long_id) {
-        var_dump($long_id) ;
     }
 
     /**
