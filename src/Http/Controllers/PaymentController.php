@@ -69,7 +69,7 @@ abstract class PaymentController extends LydiaController {
         try {
             $transaction = $this->manageResponse($payment_id) ;
 
-            $this->manageCompletedTransaction($transaction) ;
+            $this->onResponseSuccess($transaction) ;
 
             return redirect(
                 $this->getPrefix() . '/transaction/' . $transaction->long_id
@@ -79,17 +79,6 @@ abstract class PaymentController extends LydiaController {
                 $this->manageThrowable($throwable)
             ) ;
         }
-    }
-
-    /**
-     * Manage the transaction response: send email, update
-     * database, etc.
-     *
-     * @param Transaction $transaction
-     * @return void
-     */
-    protected function manageCompletedTransaction(Transaction $transaction) {
-        // Do something with the transaction.
     }
 
     /**
