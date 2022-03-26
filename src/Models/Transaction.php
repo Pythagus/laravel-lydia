@@ -18,6 +18,7 @@ use Pythagus\LaravelLydia\Support\HasLongIdentifier;
  * @property string first_name
  * @property string last_name
  * @property string email
+ * @property bool   managed
  * @property int    state
  * @property float  total_amount
  *

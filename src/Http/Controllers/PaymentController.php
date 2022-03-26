@@ -73,7 +73,10 @@ abstract class PaymentController extends LydiaController {
                 throw new TransactionFailedException() ;
             }
 
-            return $this->onResponseSuccess($transaction) ;
+            $response = $this->onConfirmedTransaction($transaction) ;
+            $transaction->managed = true ;
+
+            return $response ;
         } catch(Throwable $throwable) {
             return $this->onResponseFail(
                 $this->manageThrowable($throwable)
@@ -93,12 +96,13 @@ abstract class PaymentController extends LydiaController {
     }
 
     /**
-     * Do something when a successfully managed Lydia response came.
+     * Do something when a successfully managed Lydia
+     * Transaction returned.
      * 
      * @param Transaction $transaction
      * @return mixed.
      */
-    protected function onResponseSuccess($transaction) {
+    protected function onConfirmedTransaction($transaction) {
         // 
     }
 
