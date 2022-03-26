@@ -62,8 +62,7 @@ class Route {
         }
 
         if($options['display'] ?? true) {
-            $key = lydia()->instance('transaction')->getRouteKeyName() ;
-            $this->setupRoute('display', 'transaction/{' . $key . '}', 'get') ;
+            $this->setupRoute('display', 'transaction/{long_id}', 'get') ;
         }
     }
 }
