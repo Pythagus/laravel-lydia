@@ -61,7 +61,7 @@ class Route {
             $this->setupRoute('response', 'lydia/{payment_id}') ;
         }
 
-        if($options['display'] ?? true) {
+        if($options['display'] ?? false) {
             $this->setupRoute('display', 'transaction/{long_id}', 'get') ;
         }
     }
