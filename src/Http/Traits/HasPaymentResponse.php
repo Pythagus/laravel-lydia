@@ -15,8 +15,6 @@ use Pythagus\Lydia\Networking\Requests\PaymentStateRequest;
  */
 trait HasPaymentResponse {
 
-	use LydiaTools ;
-
 	/**
 	 * Manage the incoming payment response
 	 * updating the Transaction instance.
@@ -38,7 +36,7 @@ trait HasPaymentResponse {
 
 			// Else, if the payment is waiting for Lydia response and has a request_uuid.
 			} else if($payment->isWaiting() && ! empty($payment->request_uuid)) {
-				$payment->transaction_identifier = $this->getTransactionIdentifier() ;
+				$payment->transaction_identifier = LydiaTools::getTransactionIdentifier() ;
 
 				// Make a state request.
 				$request = new PaymentStateRequest($payment->request_uuid) ;
