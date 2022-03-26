@@ -3,6 +3,7 @@
 namespace Pythagus\LaravelLydia\Exceptions;
 
 use Pythagus\Lydia\Contracts\LydiaException;
+use Pythagus\LaravelLydia\Models\Transaction;
 
 /**
  * Class TransactionFailedException
@@ -13,11 +14,21 @@ use Pythagus\Lydia\Contracts\LydiaException;
 class TransactionFailedException extends LydiaException {
 
     /**
+     * Transaction that failed.
+     *
+     * @var Transaction
+     */
+    public $transaction = null ;
+
+    /**
      * Exception built when a transaction failed.
      *
+     * @param Transaction $transaction
      * @param string $message
      */
-    public function __construct($message = "Transaction failed") {
+    public function __construct(Transaction $transaction = null, $message = "Transaction failed") {
         parent::__construct($message) ;
+
+        $this->transaction = $transaction ;
     }
 }
