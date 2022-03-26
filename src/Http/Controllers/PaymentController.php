@@ -75,6 +75,7 @@ abstract class PaymentController extends LydiaController {
 
             $response = $this->onConfirmedTransaction($transaction) ;
             $transaction->managed = true ;
+            $transaction->save() ;
 
             return $response ;
         } catch(Throwable $throwable) {
