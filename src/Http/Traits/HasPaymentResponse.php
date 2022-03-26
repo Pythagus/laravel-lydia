@@ -3,9 +3,9 @@
 namespace Pythagus\LaravelLydia\Http\Traits;
 
 use Pythagus\Lydia\Traits\LydiaTools;
+use Pythagus\Lydia\Http\PaymentStateRequest;
 use Pythagus\LaravelLydia\Models\Transaction;
 use Pythagus\LaravelLydia\Models\PaymentLydia;
-use Pythagus\Lydia\Networking\Requests\PaymentStateRequest;
 
 /**
  * Trait HasPaymentResponse
