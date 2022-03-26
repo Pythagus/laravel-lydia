@@ -25,10 +25,12 @@ trait HasPaymentResponse {
 	protected function manageResponse(string $payment_id) {
 		/** @var PaymentLydia $payment */
 		$payment	 = lydia()->query('payment')->where('long_id', $payment_id)->firstOrFail() ;
+
+		/** @var Transaction $transaction */
 		$transaction = $payment->transaction ;
 
-		// Don't do anything for confirmed.
-		if(! $transaction->isConfirmed()) {
+		// Don't do anything unless the transaction is waiting.
+		if($transaction->isWaiting()) {
 			
 			// If the payment is already confirmed.
 			if($payment->isConfirmed()) {

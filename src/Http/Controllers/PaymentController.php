@@ -69,7 +69,7 @@ abstract class PaymentController extends LydiaController {
         try {
             $transaction = $this->manageResponse($payment_id) ;
 
-            if(! $transaction->isConfirmed()) {
+            if($transaction->isCanceled()) {
                 throw new TransactionFailedException() ;
             }
 
