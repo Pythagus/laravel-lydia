@@ -68,20 +68,25 @@ abstract class PaymentController extends LydiaController {
     public function response(string $payment_id) {
         try {
             $transaction = $this->manageResponse($payment_id) ;
+        } catch (Throwable $throwable) {
+            return $this->onResponseFail(
+                $this->manageThrowable($throwable)
+            ) ;
+        }
 
+        try {
             if($transaction->isCanceled()) {
                 throw new TransactionFailedException($transaction) ;
             }
 
-            $response = $this->onConfirmedTransaction($transaction) ;
-            $transaction->managed = true ;
-            $transaction->save() ;
-
-            return $response ;
+            return $this->onConfirmedTransaction($transaction) ;
         } catch(Throwable $throwable) {
             return $this->onResponseFail(
                 $this->manageThrowable($throwable)
             ) ;
+        } finally {
+            $transaction->managed = true;
+            $transaction->save() ;
         }
     }
 
