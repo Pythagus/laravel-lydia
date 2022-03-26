@@ -52,4 +52,24 @@ trait HasLongIdentifier {
 
         $this->long_id = $key ;
     }
+
+    /**
+     * Find the instance identified by the given
+     * long identifier.
+     * 
+     * @return static
+     */
+    public static function findOrFailByLongId(string $long_id) {
+        return static::query()->where('long_id', $long_id)->firstOrFail() ;
+    }
+
+    /**
+     * Find the instance identified by the given
+     * long identifier.
+     * 
+     * @return static|null
+     */
+    public static function findByLongId(string $long_id) {
+        return static::query()->where('long_id', $long_id)->first() ;
+    }
 }
