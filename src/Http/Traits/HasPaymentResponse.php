@@ -1,6 +1,6 @@
 <?php
 
-namespace Pythagus\LaravelLydia\Support;
+namespace Pythagus\LaravelLydia\Http\Traits;
 
 use Pythagus\Lydia\Traits\LydiaTools;
 use Pythagus\LaravelLydia\Models\Transaction;
@@ -8,12 +8,12 @@ use Pythagus\LaravelLydia\Models\PaymentLydia;
 use Pythagus\Lydia\Networking\Requests\PaymentStateRequest;
 
 /**
- * Trait ManagePaymentResponse
- * @package Pythagus\LaravelLydia\Support
+ * Trait HasPaymentResponse
+ * @package Pythagus\LaravelLydia\Http\Traits
  * 
  * @author Damien MOLINA
  */
-trait ManagePaymentResponse {
+trait HasPaymentResponse {
 
 	use LydiaTools ;
 
@@ -24,13 +24,14 @@ trait ManagePaymentResponse {
 	 * @param string $payment_id
 	 * @return Transaction
 	 */
-    protected function _manageResponse(string $payment_id) {
+    protected function manageResponse(string $payment_id) {
 		/** @var PaymentLydia $payment */
 		$payment     = lydia()->query('payment')->where('long_id', $payment_id)->firstOrFail() ;
 		$transaction = $payment->transaction ;
 
 		// Don't do anything for confirmed.
 		if(! $transaction->isConfirmed()) {
+			
 			// If the payment is already confirmed.
 			if($payment->isConfirmed()) {
 				$transaction->state = Transaction::CONFIRMED ;

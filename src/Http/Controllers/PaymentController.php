@@ -1,6 +1,6 @@
 <?php
 
-namespace Pythagus\LaravelLydia\Http;
+namespace Pythagus\LaravelLydia\Http\Controllers;
 
 use Throwable;
 use Illuminate\View\View;
@@ -8,24 +8,17 @@ use Illuminate\Http\RedirectResponse;
 use Pythagus\LaravelLydia\Models\Transaction;
 use Pythagus\LaravelLydia\Models\PaymentLydia;
 use Pythagus\Lydia\Networking\Requests\PaymentRequest;
-use Pythagus\LaravelLydia\Support\ManagePaymentResponse;
+use Pythagus\LaravelLydia\Http\Traits\HasPaymentResponse;
 
 /**
- * Class LydiaPaymentController
- * @package Pythagus\LaravelLydia\Http
+ * Class PaymentController
+ * @package Pythagus\LaravelLydia\Http\Controllers
  *
  * @author: Damien MOLINA
  */
-abstract class LydiaPaymentController extends LydiaController {
+abstract class PaymentController extends LydiaController {
 
-	use ManagePaymentResponse ;
-
-	/**
-	 * URL prefix used to redirect Lydia responses.
-	 *
-	 * @var string
-	 */
-	protected $prefix ;
+	use HasPaymentResponse ;
 
 	/**
 	 * Make a request to the Lydia API.
@@ -46,7 +39,7 @@ abstract class LydiaPaymentController extends LydiaController {
 
 			// Make the request
 			$request = new PaymentRequest() ;
-			$request->setFinishCallback($this->prefix . '/lydia/' . $lydia->long_id) ;
+			$request->setFinishCallback($this->getPrefix() . '/lydia/' . $lydia->long_id) ;
 			$data = $request->execute([
 				'message'   => $message,
 				'recipient' => $transaction->email,
@@ -74,10 +67,10 @@ abstract class LydiaPaymentController extends LydiaController {
 	 */
 	public function response(string $payment_id) {
 		try {
-			$transaction = $this->_manageResponse($payment_id) ;
+			$transaction = $this->manageResponse($payment_id) ;
 
 			return redirect(
-				$this->prefix . '/transaction/' . $transaction->long_id
+				$this->getPrefix() . '/transaction/' . $transaction->long_id
 			) ;
 		} catch(Throwable $throwable) {
 			return $this->onResponseFail(

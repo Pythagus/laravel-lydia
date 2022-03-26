@@ -2,8 +2,10 @@
 
 namespace Pythagus\LaravelLydia;
 
+use ReflectionClass;
 use Pythagus\LaravelLydia\Http\Route;
 use Illuminate\Database\Eloquent\Builder;
+use Pythagus\LaravelLydia\Http\LydiaController;
 
 /**
  * Class Lydia
@@ -58,6 +60,16 @@ class Lydia {
 	 * @return Route
 	 */
 	public function routes(string $controller, string $prefix = null) {
+		// If the given controller is a ::class.
+		if(class_exists($controller)) {
+			/** @var LydiaController $instance */
+			$instance = new $controller ;
+
+			return new Route(
+				(new ReflectionClass($instance))->getShortName(), $prefix ?? $instance->getPrefix()
+			) ;
+		}
+
 		return new Route($controller, $prefix) ;
 	}
 

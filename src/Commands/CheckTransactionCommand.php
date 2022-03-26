@@ -8,7 +8,7 @@ use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
 use Pythagus\LaravelLydia\Models\Transaction;
 use Pythagus\LaravelLydia\Models\PaymentLydia;
-use Pythagus\LaravelLydia\Support\ManagePaymentResponse;
+use Pythagus\LaravelLydia\Http\Traits\HasPaymentResponse;
 
 /**
  * Class CheckTransactionCommand
@@ -18,7 +18,7 @@ use Pythagus\LaravelLydia\Support\ManagePaymentResponse;
  */
 abstract class CheckTransactionCommand extends Command {
 
-	use ManagePaymentResponse ;
+	use HasPaymentResponse ;
 
 	/**
 	 * The name and signature of the console command.
@@ -79,7 +79,7 @@ abstract class CheckTransactionCommand extends Command {
 			$payment = $transaction->payments->sortByDesc('created_at')->first() ;
 
 			if($payment) {
-				$transaction = $this->_manageResponse($payment->id) ;
+				$transaction = $this->manageResponse($payment->id) ;
 
 				if($transaction->isConfirmed()) {
 					return $this->manageValidTransaction($transaction) ;

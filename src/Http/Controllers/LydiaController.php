@@ -1,6 +1,6 @@
 <?php
 
-namespace Pythagus\LaravelLydia\Http;
+namespace Pythagus\LaravelLydia\Http\Controllers;
 
 use Throwable;
 use App\Http\Controllers\Controller;
@@ -9,11 +9,27 @@ use Pythagus\Lydia\Exceptions\LydiaErrorResponseException;
 
 /**
  * Class LydiaController
- * @package Pythagus\LaravelLydia\Http
+ * @package Pythagus\LaravelLydia\Http\Controllers
  *
  * @author: Damien MOLINA
  */
-class LydiaController extends Controller {
+abstract class LydiaController extends Controller {
+
+    /**
+     * URL prefix used to redirect Lydia responses.
+     *
+     * @var string
+     */
+    protected $prefix ;
+
+    /**
+     * Get the prefix of the controller.
+     * 
+     * @return string
+     */
+    public function getPrefix() {
+        return $this->prefix ;
+    }
 
     /**
      * Manage the throwable and return the 
@@ -38,7 +54,7 @@ class LydiaController extends Controller {
      */
     protected function getThrowableMessage(Throwable $throwable) {
         if($throwable instanceof LydiaErrorResponseException) {
-            if($this instanceof LydiaPaymentController) {
+            if($this instanceof PaymentController) {
                 return trans('lydia::lydia.payment.' . $throwable->code) ;
             }
         }
