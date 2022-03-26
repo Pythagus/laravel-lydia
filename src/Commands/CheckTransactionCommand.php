@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
 use Pythagus\LaravelLydia\Models\Transaction;
 use Pythagus\LaravelLydia\Models\PaymentLydia;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Pythagus\LaravelLydia\Http\Traits\HasPaymentResponse;
 
 /**
@@ -43,6 +44,14 @@ abstract class CheckTransactionCommand extends Command {
     abstract protected function manageValidTransaction($transaction) ;
 
     /**
+     * Manage a refused transaction.
+     *
+     * @param Transaction $transaction
+     * @return void
+     */
+    abstract protected function manageRefusedTransaction($transaction) ;
+
+    /**
      * The start date of checked transaction
      * regarding their created_at date.
      *
@@ -59,12 +68,17 @@ abstract class CheckTransactionCommand extends Command {
     abstract protected function endDate() ;
 
     /**
-     * Manage a refused transaction.
+     * Refuse the given transaction
      *
      * @param Transaction $transaction
      * @return void
      */
-    abstract protected function manageRefusedTransaction($transaction) ;
+    private function refuseTransaction($transaction) {
+        $transaction->state = Transaction::CANCELED ;
+        $transaction->save() ;
+
+        $this->manageRefusedTransaction($transaction) ;
+    }
 
     /**
      * Check whether a transaction is valid or not.
@@ -86,7 +100,9 @@ abstract class CheckTransactionCommand extends Command {
                 }
             }
 
-            $this->manageRefusedTransaction($transaction) ;
+            $this->refuseTransaction($transaction) ;
+        } catch(ModelNotFoundException $ignored) {
+            $this->refuseTransaction($transaction) ;
         } catch(Throwable $throwable) {
             $this->warn($throwable) ;
         }
