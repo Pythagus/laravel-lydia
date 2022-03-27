@@ -34,7 +34,6 @@ abstract class PaymentController extends LydiaController {
             $lydia = lydia()->instance('payment') ;
             $lydia->state = PaymentLydia::WAITING_PAYMENT ;
             $lydia->transaction_id = $transaction->id ;
-            $lydia->generateLongId() ;
             $lydia->save() ;
 
             // Make the request.

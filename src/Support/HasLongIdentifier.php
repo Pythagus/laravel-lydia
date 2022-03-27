@@ -3,6 +3,7 @@
 namespace Pythagus\LaravelLydia\Support;
 
 use Illuminate\Support\Str;
+use Pythagus\LaravelLydia\Models\Transaction;
 
 /**
  * Help the class needing a long
@@ -51,6 +52,21 @@ trait HasLongIdentifier {
         } while(self::query()->where('long_id', $key)->exists()) ;
 
         $this->long_id = $key ;
+    }
+
+    /**
+     * Add a saving event to automatically
+     * generate the long_id field.
+     *
+     * @return void
+     */
+    protected static function booted() {
+        /** @var HasLongIdentifier $model */
+        static::saving(function($model) {
+            if(empty($model->long_id)) {
+                $model->generateLongId() ;
+            }
+        }) ;
     }
 
     /**
