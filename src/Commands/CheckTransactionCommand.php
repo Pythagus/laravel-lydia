@@ -146,7 +146,15 @@ abstract class CheckTransactionCommand extends Command {
                 $this->checkTransaction($transaction) ;
             }
         } else {
-            $transaction = $this->query()->find($id) ;
+            /** @var Transaction $model */
+            $model = lydia()->instance('transaction') ;
+            $transaction = $this->query()
+                ->where($model->getRouteKeyName(), $id)
+                ->first() ;
+
+            if(!$transaction) {
+                $transaction = $this->query()->where('id', $id)->first() ;
+            }
 
             if($transaction) {
                 $this->checkTransaction($transaction) ;
