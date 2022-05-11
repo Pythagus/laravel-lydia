@@ -93,15 +93,13 @@ abstract class CheckTransactionCommand extends Command {
             $payment = $transaction->payments->sortByDesc('created_at')->first() ;
 
             if($payment) {
-                $transaction = $this->manageResponse($payment->id) ;
+                $transaction = $this->manageResponse($payment->long_id) ;
 
                 if($transaction->isConfirmed()) {
                     return $this->manageValidTransaction($transaction) ;
                 }
             }
 
-            $this->refuseTransaction($transaction) ;
-        } catch(ModelNotFoundException $ignored) {
             $this->refuseTransaction($transaction) ;
         } catch(Throwable $throwable) {
             $this->warn($throwable) ;
@@ -152,7 +150,7 @@ abstract class CheckTransactionCommand extends Command {
                 ->where($model->getRouteKeyName(), $id)
                 ->first() ;
 
-            if(!$transaction) {
+            if(! $transaction) {
                 $transaction = $this->query()->where('id', $id)->first() ;
             }
 
